@@ -16,20 +16,34 @@ CREATE TABLE `oj_user`
 );
 
 
-CREATE UNIQUE INDEX idx_user_id ON oj_user (user_id);
+CREATE UNIQUE INDEX unidx_user_id ON oj_user (user_id);
 -- 分类表
 CREATE TABLE `oj_type`
 (
     `id`         INT PRIMARY KEY AUTO_INCREMENT COMMENT '',
-    `parent_id`  VARCHAR(255) NOT NULL COMMENT '',
-    `tag_name`   VARCHAR(50)  NOT NULL COMMENT '',
+    `parent_id`  VARCHAR(255) NOT NULL COMMENT 'type_id',
+    `tag_name`   VARCHAR(255)  NOT NULL COMMENT '',
     `createTime` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `updateTime` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
     `isDelete`   INT      DEFAULT 0 COMMENT '逻辑删除标志（0: 未删除，1: 已删除）'
 );
 
-CREATE UNIQUE INDEX idx_parent_id ON oj_type (parent_id);
+CREATE UNIQUE INDEX unidx_parent_id ON oj_type (parent_id);
 CREATE INDEX idx_tag_name ON oj_type (tag_name);
+
+-- 问题分类表
+CREATE TABLE `oj_question_type`
+(
+    `id`         INT PRIMARY KEY AUTO_INCREMENT COMMENT '',
+    `type_id`    VARCHAR(255) NOT NULL COMMENT 'type_id',
+    `question_id`   VARCHAR(255)  NOT NULL COMMENT '',
+    `createTime` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updateTime` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    `isDelete`   INT      DEFAULT 0 COMMENT '逻辑删除标志（0: 未删除，1: 已删除）'
+)
+CREATE INDEX idx_type_id ON oj_question_type (type_id);
+CREATE INDEX idx_question_id ON oj_question_type (question_id);
+
 -- 问题表
 CREATE TABLE `oj_question`
 (
@@ -48,7 +62,7 @@ CREATE TABLE `oj_question`
     `updateTime`  DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
     `isDelete`    INT      DEFAULT 0 COMMENT '逻辑删除标志（0: 未删除，1: 已删除）'
 );
-CREATE UNIQUE INDEX idx_question_id ON oj_question (question_id);
+CREATE UNIQUE INDEX unidx_question_id ON oj_question (question_id);
 -- 提交表
 CREATE TABLE `oj_question_submit_info`
 (
@@ -64,5 +78,4 @@ CREATE TABLE `oj_question_submit_info`
     `updateTime`         DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
     `isDelete`           INT      DEFAULT 0 COMMENT '逻辑删除标志（0: 未删除，1: 已删除）',
 );
-CREATE UNIQUE INDEX idx_question_submit_id ON oj_question_submit_info (question_submit_id);
-
+CREATE UNIQUE INDEX unidx_question_submit_id ON oj_question_submit_info (question_submit_id);
