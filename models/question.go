@@ -15,5 +15,5 @@ type Question struct {
 }
 
 func (table Question) TableName() string {
-	return "question"
+	return "oj_question"
 }

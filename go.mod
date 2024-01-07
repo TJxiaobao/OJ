@@ -1,11 +1,9 @@
-module OJ
+module github.com/TJxiaobao/OJ
 
 go 1.20
 
 require (
-	github.com/TJxiaobao/go-ddd-template v0.0.0-20230804064533-2516764d5113
 	github.com/gin-gonic/gin v1.9.1
-	github.com/sirupsen/logrus v1.9.3
 	gorm.io/driver/mysql v1.5.1
 	gorm.io/gorm v1.25.2
 )

@@ -11,5 +11,5 @@ type QuestionSubmit struct {
 }
 
 func (table QuestionSubmit) TableName() string {
-	return "question_submit"
+	return "oj_question_submit_info"
 }

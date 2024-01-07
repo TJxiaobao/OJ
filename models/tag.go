@@ -7,5 +7,5 @@ type Tag struct {
 }
 
 func (table Tag) TableName() string {
-	return "tag"
+	return "oj_type"
 }

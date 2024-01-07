@@ -11,5 +11,5 @@ type User struct {
 }
 
 func (table User) TableName() string {
-	return "user"
+	return "oj_user"
 }
