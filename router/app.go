@@ -22,9 +22,14 @@ func Router() *gin.Engine {
 	// Swagger 配置
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	r.GET("/app", service.Test)
-	r.GET("/get_question", service.GetQuestionList)
-	r.GET("/get_question_detail", service.GetQuestionDetail)
+	// question
+	r.GET("/question/app", service.Test)
+	r.GET("/question/get_question", service.GetQuestionList)
+	r.GET("/question/get_question_detail", service.GetQuestionDetail)
+
+	// user
+	r.GET("/user/get_user_detail", service.GetUserDetail)
+	r.POST("/user/delete_user", service.DeleteUser)
 
 	return r
 }
