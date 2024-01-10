@@ -2,7 +2,7 @@ package models
 
 type User struct {
 	BaseModel
-	UserId   int    `gorm:"column:user_id" json:"-"`
+	UserId   string `gorm:"column:user_id" json:"-"`
 	UserName string `gorm:"column:username" json:"-"`
 	PassWord string `gorm:"column:password" json:"-"`
 	Phone    int    `gorm:"column:phone" json:"-"`

@@ -2,7 +2,7 @@ package models
 
 type Question struct {
 	BaseModel
-	QuestionId int    `gorm:"column:question_id" json:"-"`
+	QuestionId string `gorm:"column:question_id" json:"-"`
 	Input      string `gorm:"column:input" json:"-"`
 	Output     string `gorm:"column:output" json:"-"`
 	Title      string `gorm:"column:title" json:"-"`
