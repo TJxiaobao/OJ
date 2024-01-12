@@ -5,6 +5,7 @@ import (
 	"github.com/TJxiaobao/OJ/dao"
 	"github.com/TJxiaobao/OJ/utils/md5"
 	"github.com/TJxiaobao/OJ/utils/restapi"
+	"github.com/TJxiaobao/OJ/utils/token"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -61,6 +62,15 @@ func DeleteUser(c *gin.Context) {
 	restapi.Success(c, "删除成果！")
 }
 
+// Login
+// @Summary      用户登陆
+// @Description	 test
+// @Tags         user
+// @Param        user_id   formData string  false "user_id"
+// @Param        username   formData string  false "username"
+// @Param        password   formData string  false "password"
+// @Success      200  {string} json "{"code" : "200", "msg" : "", "data" : ""}"
+// @Router       /user/login [post]
 func Login(c *gin.Context) {
 	cmd := cqe.LoginCmd{}
 	if err := c.ShouldBindJSON(cmd); err != nil {
@@ -86,8 +96,14 @@ func Login(c *gin.Context) {
 		restapi.Success(c, "password error")
 		return
 	} else {
-		token := restapi.NewTokenResult("token")
-		restapi.Success(c, token)
+		token_str, err := token.GenerateToken(data.UserName, data.UserId)
+		if err != nil {
+			log.Print("generate token error", err)
+			restapi.FailedWithStatus(c, err, 500)
+			return
+		}
+		token_result := restapi.NewTokenResult(token_str)
+		restapi.Success(c, token_result)
 		return
 	}
 }
