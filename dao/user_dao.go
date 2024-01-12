@@ -25,3 +25,13 @@ func DeleteUser(user_id string) error {
 	}
 	return nil
 }
+
+func SelectUserByUserName(username string) (*models.User, error) {
+	var user models.User
+	err := DB.Model(models.User{}).First(&user).Where("user_name = ? and isDelete = 0", username).Error
+	if err != nil {
+		log.Print("DB select user error", err)
+		return nil, err
+	}
+	return &user, nil
+}

@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/TJxiaobao/OJ/cqe"
 	"github.com/TJxiaobao/OJ/dao"
+	"github.com/TJxiaobao/OJ/utils/md5"
 	"github.com/TJxiaobao/OJ/utils/restapi"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -58,5 +59,35 @@ func DeleteUser(c *gin.Context) {
 		return
 	}
 	restapi.Success(c, "删除成果！")
+}
 
+func Login(c *gin.Context) {
+	cmd := cqe.LoginCmd{}
+	if err := c.ShouldBindJSON(cmd); err != nil {
+		log.Print("Login cmd error", err)
+		restapi.Failed(c, err)
+		return
+	}
+
+	// 判断 参数 是否为空
+	if err := cmd.Validate(); err != nil {
+		log.Print("Login params must not null", err)
+		restapi.Failed(c, err)
+		return
+	}
+
+	data, err := dao.SelectUserByUserName(cmd.UserName)
+	if err != nil {
+		restapi.FailedWithStatus(c, err, 500)
+		return
+	}
+	password := md5.Md5Encrypt(cmd.PassWord)
+	if data.PassWord != password {
+		restapi.Success(c, "password error")
+		return
+	} else {
+		token := restapi.NewTokenResult("token")
+		restapi.Success(c, token)
+		return
+	}
 }

@@ -31,3 +31,13 @@ func NewPageResult(rows interface{}, pageNum, pageSize int, count int64) *PageRe
 		Rows: rows,
 	}
 }
+
+type TokenResult struct {
+	Token string `json:"token"`
+}
+
+func NewTokenResult(token string) *TokenResult {
+	return &TokenResult{
+		Token: token,
+	}
+}

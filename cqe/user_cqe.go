@@ -23,3 +23,18 @@ func (u *DeleteUserCmd) Validate() error {
 	}
 	return nil
 }
+
+type LoginCmd struct {
+	UserName string `json:"user_name"`
+	PassWord string `json:"pass_word"`
+}
+
+func (l *LoginCmd) Validate() error {
+	if l.UserName == "" {
+		return errno.NewSimpleBizError(errno.ErrMissingParameter, nil, "user_name")
+	}
+	if l.PassWord == "" {
+		return errno.NewSimpleBizError(errno.ErrMissingParameter, nil, "password")
+	}
+	return nil
+}
