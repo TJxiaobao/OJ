@@ -35,3 +35,17 @@ func SelectUserByUserName(username string) (*models.User, error) {
 	}
 	return &user, nil
 }
+
+func Insert(user models.User) error {
+	return DB.Model(models.User{}).Create(user).Error
+}
+
+func SelectUserByPhone(phone string) int64 {
+	var count int64
+	err := DB.Model(models.User{}).Count(&count)
+	if err != nil {
+		log.Print("select user by phone count error", err)
+		return -1
+	}
+	return count
+}

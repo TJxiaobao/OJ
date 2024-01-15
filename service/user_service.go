@@ -1,14 +1,20 @@
 package service
 
 import (
+	"fmt"
 	"github.com/TJxiaobao/OJ/cqe"
 	"github.com/TJxiaobao/OJ/dao"
+	"github.com/TJxiaobao/OJ/models"
+	"github.com/TJxiaobao/OJ/utils/errno"
 	"github.com/TJxiaobao/OJ/utils/md5"
 	"github.com/TJxiaobao/OJ/utils/restapi"
 	"github.com/TJxiaobao/OJ/utils/token"
+	"github.com/TJxiaobao/OJ/utils/uuid"
 	"github.com/gin-gonic/gin"
 	"log"
+	"math/rand"
 	"net/http"
+	"time"
 )
 
 func GetUserDetail(c *gin.Context) {
@@ -106,4 +112,88 @@ func Login(c *gin.Context) {
 		restapi.Success(c, token_result)
 		return
 	}
+}
+
+func Register(c *gin.Context) {
+	cmd := cqe.Register{}
+	if err := c.ShouldBindJSON(cmd); err != nil {
+		log.Print("register cmd error", err)
+		restapi.Failed(c, err)
+		return
+	}
+
+	// 判断 参数 是否为空
+	if err := cmd.Validate(); err != nil {
+		log.Print("Register params must not null", err)
+		restapi.Failed(c, err)
+		return
+	}
+
+	// 判断 验证码 是否正确
+	deCode, err := dao.InitRedis().Get(c, cmd.Phone).Result()
+	if err != nil {
+		restapi.FailedWithStatus(c, err, 500)
+		return
+	}
+	if deCode != cmd.Code {
+		restapi.FailedWithStatus(c, errno.NewSimpleBizError(errno.ErrMissingParameter, nil, "code"), 400)
+		return
+	}
+
+	// 通过手机号判断是否已经注册
+	count := dao.SelectUserByPhone(cmd.Phone)
+	if count > 0 {
+		restapi.Success(c, "该手机号已注册！")
+		return
+	}
+
+	// 注册用户
+	user := models.User{
+		UserId:   uuid.GetUUID(),
+		UserName: cmd.UserName,
+		PassWord: md5.Md5Encrypt(cmd.Password),
+		Phone:    cmd.Phone,
+	}
+	err = dao.Insert(user)
+	if err != nil {
+		restapi.FailedWithStatus(c, err, 500)
+		return
+	}
+
+	// 生成 token
+	newToken, err := token.GenerateToken(user.UserName, user.UserId)
+	resp := restapi.NewTokenResult(newToken)
+	restapi.Success(c, resp)
+}
+
+// createCode 生成6位验证码
+func createCode() (code string) {
+	rand.Seed(time.Now().Unix()) //设置随机种子
+	code = fmt.Sprintf("%6v", rand.Intn(600000))
+	return
+}
+
+func SendCode(c *gin.Context) {
+	cmd := cqe.SendCodeCmd{}
+	if err := c.ShouldBindJSON(cmd); err != nil {
+		log.Print("sendCode cmd error", err)
+		restapi.Failed(c, err)
+		return
+	}
+
+	// 判断 参数 是否为空
+	if err := cmd.Validate(); err != nil {
+		log.Print("sendcode params must not null", err)
+		restapi.Failed(c, err)
+		return
+	}
+
+	code := createCode()
+	err := dao.InitRedis().Set(c, cmd.Phone, code, time.Second*300) // 设置时间为 5 分钟
+	if err != nil {
+		log.Print("redis set error", err)
+		restapi.FailedWithStatus(c, nil, 500)
+		return
+	}
+	restapi.Success(c, "send code success !")
 }
