@@ -72,6 +72,10 @@ func GetQuestionDetail(c *gin.Context) {
 	}
 
 	data, err := dao.GetQuestionDetail(query.QuestionId)
+	if data == nil {
+		restapi.Success(c, "This problem does not exist, please contact the staff！")
+		return
+	}
 	if err != nil {
 		restapi.Failed(c, err)
 		return
