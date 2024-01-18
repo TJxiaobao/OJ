@@ -3,7 +3,7 @@ package cqe
 import "github.com/TJxiaobao/OJ/utils/errno"
 
 type GetUserDetailQuery struct {
-	UserId string `json:"user_id"`
+	UserId string `json:"user_id" form:"user_id"`
 }
 
 func (u *GetUserDetailQuery) Validate() error {
@@ -14,7 +14,7 @@ func (u *GetUserDetailQuery) Validate() error {
 }
 
 type DeleteUserCmd struct {
-	UserId string `json:"user_id"`
+	UserId string `json:"user_id" form:"user_id"`
 }
 
 func (u *DeleteUserCmd) Validate() error {
@@ -25,9 +25,9 @@ func (u *DeleteUserCmd) Validate() error {
 }
 
 type LoginCmd struct {
-	UserName string `json:"username"`
-	PassWord string `json:"password"`
-	UserId   string `json:"user_id"`
+	UserName string `json:"username" form:"username"`
+	PassWord string `json:"password" form:"username"`
+	UserId   string `json:"user_id" form:"user_id"`
 }
 
 func (l *LoginCmd) Validate() error {
@@ -44,10 +44,10 @@ func (l *LoginCmd) Validate() error {
 }
 
 type Register struct {
-	UserName string `json:"username"`
-	Password string `json:"password"`
-	Phone    string `json:"phone"`
-	Code     string `json:"code"`
+	UserName string `json:"username" form:"username"`
+	Password string `json:"password" form:"password"`
+	Phone    string `json:"phone" form:"phone"`
+	Code     string `json:"code" form:"phone"`
 }
 
 func (r *Register) Validate() error {
@@ -67,7 +67,7 @@ func (r *Register) Validate() error {
 }
 
 type SendCodeCmd struct {
-	Phone string `json:"phone"`
+	Phone string `json:"phone" form:"phone"`
 }
 
 func (s *SendCodeCmd) Validate() error {

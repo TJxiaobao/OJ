@@ -19,7 +19,7 @@ import (
 
 func GetUserDetail(c *gin.Context) {
 	query := cqe.GetUserDetailQuery{}
-	if err := c.ShouldBindJSON(query); err != nil {
+	if err := c.ShouldBindQuery(&query); err != nil {
 		log.Print("user query error", err)
 		restapi.Failed(c, err)
 		return
@@ -47,7 +47,7 @@ func GetUserDetail(c *gin.Context) {
 
 func DeleteUser(c *gin.Context) {
 	cmd := cqe.DeleteUserCmd{}
-	if err := c.ShouldBindJSON(cmd); err != nil {
+	if err := c.BindJSON(&cmd); err != nil {
 		log.Print("user query error", err)
 		restapi.Failed(c, err)
 		return
@@ -79,7 +79,7 @@ func DeleteUser(c *gin.Context) {
 // @Router       /user/login [post]
 func Login(c *gin.Context) {
 	cmd := cqe.LoginCmd{}
-	if err := c.ShouldBindJSON(cmd); err != nil {
+	if err := c.BindJSON(&cmd); err != nil {
 		log.Print("Login cmd error", err)
 		restapi.Failed(c, err)
 		return
@@ -116,7 +116,7 @@ func Login(c *gin.Context) {
 
 func Register(c *gin.Context) {
 	cmd := cqe.Register{}
-	if err := c.ShouldBindJSON(cmd); err != nil {
+	if err := c.BindJSON(&cmd); err != nil {
 		log.Print("register cmd error", err)
 		restapi.Failed(c, err)
 		return
@@ -175,7 +175,7 @@ func createCode() (code string) {
 
 func SendCode(c *gin.Context) {
 	cmd := cqe.SendCodeCmd{}
-	if err := c.ShouldBindJSON(cmd); err != nil {
+	if err := c.BindJSON(&cmd); err != nil {
 		log.Print("sendCode cmd error", err)
 		restapi.Failed(c, err)
 		return

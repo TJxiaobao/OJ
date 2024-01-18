@@ -35,7 +35,7 @@ func GetQuestionList(c *gin.Context) {
 	}
 
 	query := cqe.GetQuestionQuery{}
-	if err = c.ShouldBindJSON(query); err != nil {
+	if err = c.ShouldBindQuery(&query); err != nil {
 		log.Print("question query error", err)
 		restapi.Failed(c, err)
 		return
@@ -58,7 +58,7 @@ func GetQuestionList(c *gin.Context) {
 
 func GetQuestionDetail(c *gin.Context) {
 	query := cqe.GetQuestionDetailQuery{}
-	if err := c.ShouldBindJSON(query); err != nil {
+	if err := c.ShouldBindQuery(&query); err != nil {
 		log.Print("question query error", err)
 		restapi.Failed(c, err)
 		return

@@ -26,7 +26,7 @@ func GetQuestionSubmitList(c *gin.Context) {
 	}
 
 	query := cqe.GetQuestionSubmitListQuery{}
-	if err = c.ShouldBindJSON(query); err != nil {
+	if err = c.ShouldBindQuery(&query); err != nil {
 		log.Print("question_submit query error", err)
 		restapi.Failed(c, err)
 		return
