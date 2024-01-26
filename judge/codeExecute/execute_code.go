@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-func CodeExecute(language, code, input string) {
+func CodeExecute(language, code, input string) *models.Response {
 	// 构建参数
 	request := models.Request{
 		Language: language,
@@ -19,7 +19,7 @@ func CodeExecute(language, code, input string) {
 	jsonBody, err := json.Marshal(request)
 	if err != nil {
 		log.Fatal("json error :", err)
-		return
+		return nil
 	}
 
 	// 创建请求
@@ -39,7 +39,7 @@ func CodeExecute(language, code, input string) {
 	// 处理响应
 	if resp.StatusCode != http.StatusOK {
 		log.Fatal("Request failed with status:", resp.StatusCode)
-		return
+		return nil
 	}
 
 	var responseBody models.Response
@@ -63,4 +63,6 @@ func CodeExecute(language, code, input string) {
 	print(judgeTime)
 	print(judgeMemory)
 	print(judgeMessage)
+
+	return &models.Response{}
 }

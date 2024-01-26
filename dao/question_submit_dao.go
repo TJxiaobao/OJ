@@ -32,3 +32,7 @@ func GetQuestionSubmitList(user_id, question_id string, status, page, size int) 
 	}
 	return data, count, nil
 }
+
+func SaveQuestionSubmitInfo(question_submit_info models.QuestionSubmit) error {
+	return DB.Model(models.QuestionSubmit{}).Create(question_submit_info).Error
+}
