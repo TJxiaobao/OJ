@@ -25,6 +25,9 @@ func CodeExecute(language, code, input string) *models.Response {
 	// 创建请求
 	req, err := http.NewRequest("POST", constant.SandBoXUrl, bytes.NewBuffer(jsonBody))
 
+	// 添加鉴权请求头
+	req.Header.Set(constant.AUTH_REQUEST_HEADER, constant.AUTH_REQUEST_SECRET)
+
 	// 设置请求头
 	req.Header.Set("Content-Type", "application/json")
 
