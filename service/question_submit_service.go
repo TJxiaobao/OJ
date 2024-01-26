@@ -78,5 +78,30 @@ func QuestionSubmit(c *gin.Context) {
 		restapi.Failed(c, err)
 		return
 	}
+
+	// 业务处理
+	question, err := dao.GetQuestionDetail(cmd.QuestionId)
+
+	// 1、 然后判断是否超时或者超出内存
+	if res.Status == constant.StatusOK && res.JudgeInfo.Time > question.MaxRunTime {
+		log.Print("outTime ", question, cmd.UserId)
+		restapi.Success(c, "超时！")
+		return
+	}
+	if res.Status == constant.StatusOK && res.JudgeInfo.Memory > question.MaxMem {
+		log.Print("out max mem ", question, cmd.UserId)
+		restapi.Success(c, "内存过大！")
+		return
+	}
+
+	// 2、 判断输出是否正确
+	if res.Status == constant.StatusOK && res.Output == question.Output {
+		restapi.Success(c, "AC!")
+		return
+	} else if res.Status == constant.StatusOK && res.Output != question.Output {
+		restapi.Success(c, "输出错误！")
+		return
+	}
+	// 3、 首先判断 status 如果不是执行成功，则返回。
 	restapi.Success(c, res)
 }

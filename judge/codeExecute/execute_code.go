@@ -58,14 +58,16 @@ func CodeExecute(language, code, input string) *models.Response {
 	judgeMessage := responseBody.JudgeInfo.Message
 	judgeMemory := responseBody.JudgeInfo.Memory
 	judgeTime := responseBody.JudgeInfo.Time
-
-	// 业务处理
-	print(output)
-	print(message)
-	print(status)
-	print(judgeTime)
-	print(judgeMemory)
-	print(judgeMessage)
-
-	return &models.Response{}
+	judgeInfo := &models.JudgeInfo{
+		Message: judgeMessage,
+		Memory:  judgeMemory,
+		Time:    judgeTime,
+	}
+	res := &models.Response{
+		Message:   message,
+		Output:    output,
+		Status:    status,
+		JudgeInfo: *judgeInfo,
+	}
+	return res
 }
