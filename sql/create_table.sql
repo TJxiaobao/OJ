@@ -40,7 +40,7 @@ CREATE TABLE `oj_question_type`
     `createTime` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `updateTime` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
     `isDelete`   INT      DEFAULT 0 COMMENT '逻辑删除标志（0: 未删除，1: 已删除）'
-)
+);
 CREATE INDEX idx_type_id ON oj_question_type (type_id);
 CREATE INDEX idx_question_id ON oj_question_type (question_id);
 
