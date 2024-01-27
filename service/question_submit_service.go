@@ -53,7 +53,7 @@ func QuestionSubmit(c *gin.Context) {
 		return
 	}
 
-	// 判断是否存在改题目
+	// 判断是否存在该题目
 	que, err := dao.GetQuestionDetail(cmd.QuestionId)
 	if que == nil {
 		restapi.Success(c, "没有该题目!")
