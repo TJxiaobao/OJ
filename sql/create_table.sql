@@ -76,6 +76,6 @@ CREATE TABLE `oj_question_submit_info`
     `judge_info`         VARCHAR(255) NOT NULL COMMENT '',
     `createTime`         DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `updateTime`         DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
-    `isDelete`           INT      DEFAULT 0 COMMENT '逻辑删除标志（0: 未删除，1: 已删除）',
+    `isDelete`           INT      DEFAULT 0 COMMENT '逻辑删除标志（0: 未删除，1: 已删除）'
 );
 CREATE UNIQUE INDEX unidx_question_submit_id ON oj_question_submit_info (question_submit_id);
