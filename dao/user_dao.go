@@ -8,8 +8,8 @@ import (
 func GetUserDetail(user_id string) (*models.User, error) {
 	var user models.User
 	err := DB.Model(models.User{}).
-		First(&user).
-		Where("user_id = ? and isDelete == 0", user_id).Error
+		Where("user_id = ? and isDelete = 0", user_id).
+		First(&user).Error
 	if err != nil {
 		log.Print("db getUserDetail error ", err)
 		return nil, err
