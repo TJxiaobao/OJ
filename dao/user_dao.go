@@ -1,7 +1,9 @@
 package dao
 
 import (
+	"errors"
 	"github.com/TJxiaobao/OJ/models"
+	"gorm.io/gorm"
 	"log"
 )
 
@@ -11,6 +13,9 @@ func GetUserDetail(user_id string) (*models.User, error) {
 		Where("user_id = ? and isDelete = 0", user_id).
 		First(&user).Error
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) { // 判断是否为记录不存在的错误
+			return nil, nil // 返回空的 user
+		}
 		log.Print("db getUserDetail error ", err)
 		return nil, err
 	}
@@ -28,7 +33,7 @@ func DeleteUser(user_id string) error {
 
 func SelectUserByUserName(username string) (*models.User, error) {
 	var user models.User
-	err := DB.Model(models.User{}).First(&user).Where("user_name = ? and isDelete = 0", username).Error
+	err := DB.Model(models.User{}).Where("username = ? and isDelete = 0", username).First(&user).Error
 	if err != nil {
 		log.Print("DB select user error", err)
 		return nil, err
@@ -37,14 +42,19 @@ func SelectUserByUserName(username string) (*models.User, error) {
 }
 
 func Insert(user models.User) error {
-	return DB.Model(models.User{}).Create(user).Error
+	return DB.Model(models.User{}).Create(&user).Error
 }
 
 func SelectUserByPhone(phone string) int64 {
 	var count int64
-	err := DB.Model(models.User{}).Count(&count)
+	err := DB.Model(models.User{}).
+		Where("phone = ?", phone).
+		Count(&count).Error
 	if err != nil {
-		log.Print("select user by phone count error", err)
+		if err == gorm.ErrRecordNotFound {
+			return count
+		}
+		log.Print("select user by phone count error : %v", err)
 		return -1
 	}
 	return count

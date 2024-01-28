@@ -13,4 +13,9 @@ var (
 	StatusOK        = 1
 	StatusOutTime   = 2
 	StatusOutMemory = 3
+
+	// 用户角色
+	UserRoleSuperAdmin = "0"
+	UserRoleAdmin      = "1"
+	UserNormalRole     = "2"
 )

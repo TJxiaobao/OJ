@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"github.com/TJxiaobao/OJ/constant"
 	"github.com/TJxiaobao/OJ/cqe"
 	"github.com/TJxiaobao/OJ/dao"
 	"github.com/TJxiaobao/OJ/models"
@@ -65,7 +66,7 @@ func DeleteUser(c *gin.Context) {
 		restapi.FailedWithStatus(c, err, http.StatusInternalServerError)
 		return
 	}
-	restapi.Success(c, "删除成果！")
+	restapi.Success(c, "删除成功！")
 }
 
 // Login
@@ -130,6 +131,7 @@ func Register(c *gin.Context) {
 	}
 
 	// 判断 验证码 是否正确
+	// todo test
 	deCode, err := dao.InitRedis().Get(c, cmd.Phone).Result()
 	if err != nil {
 		restapi.FailedWithStatus(c, err, 500)
@@ -153,9 +155,11 @@ func Register(c *gin.Context) {
 		UserName: cmd.UserName,
 		PassWord: md5.Md5Encrypt(cmd.Password),
 		Phone:    cmd.Phone,
+		UserRole: constant.UserNormalRole,
 	}
 	err = dao.Insert(user)
 	if err != nil {
+		log.Print("db insert error : ", err)
 		restapi.FailedWithStatus(c, err, 500)
 		return
 	}

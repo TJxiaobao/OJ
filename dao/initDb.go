@@ -3,14 +3,17 @@ package dao
 import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"log"
 )
 
 var DB = InitDb()
 
 func InitDb() *gorm.DB {
-	path := "root:abcdi2124Jcke23@tcp (192.168.1.8:3306)/gin_gorm_oj?charset=utf8mb4&parseTime=True&loc=Local"
-	db, err := gorm.Open(mysql.Open(path), &gorm.Config{})
+	path := "root:root@tcp(localhost:3306)/oj?charset=utf8mb4&parseTime=True&loc=Local"
+	db, err := gorm.Open(mysql.Open(path), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	})
 	if err != nil {
 		log.Print("init db err", err)
 		return nil
