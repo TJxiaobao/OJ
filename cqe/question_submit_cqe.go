@@ -8,6 +8,16 @@ type GetQuestionSubmitListQuery struct {
 	Status     int    `json:"status" form:"status"`
 }
 
+func (q *GetQuestionSubmitListQuery) Validate() error {
+	if q.UserId == "" {
+		return errno.NewSimpleBizError(errno.ErrMissingParameter, nil, "user_id")
+	}
+	if q.QuestionId == "" {
+		return errno.NewSimpleBizError(errno.ErrMissingParameter, nil, "question_id")
+	}
+	return nil
+}
+
 type QuestionSubmitCmd struct {
 	UserId     string `json:"user_id" form:"user_id"`
 	QuestionId string `json:"question_id" form:"question_id"`

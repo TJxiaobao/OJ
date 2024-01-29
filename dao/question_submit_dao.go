@@ -13,18 +13,18 @@ func GetQuestionSubmitList(user_id, question_id string, status, page, size int) 
 		tx = tx.Where("user_id = ?", user_id)
 	}
 	if question_id != "" {
-		tx = tx.Where("question = ?", question_id)
+		tx = tx.Where("question_id = ?", question_id)
 	}
-	if status != -1 {
+	if status != 0 {
 		tx = tx.Where("status = ?", status)
 	}
 	err := DB.Model(models.QuestionSubmit{}).
-		Count(&count).
-		Find(data).
 		Where(tx).
-		Offset(page).
-		Limit(size).
 		Where("isDelete = 0").
+		Count(&count).
+		Offset(page - 1).
+		Limit(size).
+		Find(&data).
 		Error
 	if err != nil {
 		log.Print("getQuestionSubmitDao error", err)
