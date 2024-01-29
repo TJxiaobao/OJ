@@ -10,13 +10,13 @@ func GetQuestionList(keyword string, page int, size int) ([]*models.Question, in
 	var count int64
 	err := DB.
 		Model(models.Question{}).
+		Where("title LIKE ? or content LIKE ? ", "%"+keyword+"%", "%"+keyword+"%").
+		Where("isDelete = 0").
 		Count(&count).
-		Where("title LIKE ? ", "%"+keyword+"%").
-		Where("content LIKE ? ", "%"+keyword+"%").
-		Where("isDelete == 0").
-		Offset(page).
+		Offset(page - 1).
 		Limit(size).
-		Find(&data).Error
+		Find(&data).
+		Error
 	if err != nil {
 		log.Print("GetQuestionList error", err)
 		return nil, 0
