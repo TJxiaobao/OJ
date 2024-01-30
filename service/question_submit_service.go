@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/TJxiaobao/OJ/constant"
 	"github.com/TJxiaobao/OJ/cqe"
 	"github.com/TJxiaobao/OJ/dao"
@@ -62,6 +63,10 @@ func QuestionSubmit(c *gin.Context) {
 
 	// 执行代码
 	res := codeExecute.CodeExecute(cmd.Language, cmd.Code, cmd.Input)
+	if res == nil {
+		restapi.FailedWithStatus(c, errors.New("服务器错误！"), 500)
+		return
+	}
 
 	// 刷库
 	judgeInfo, err := json.Marshal(res.JudgeInfo)

@@ -45,10 +45,18 @@ func CodeExecute(language, code, input string) *models.Response {
 		return nil
 	}
 
+	// 判断是否存在 body
 	var responseBody models.Response
-	err = json.NewDecoder(resp.Body).Decode(&responseBody)
-	if err != nil {
-		log.Fatal("Failed to decode response body:", err)
+	if resp.Body != nil {
+		defer resp.Body.Close() // 确保在函数返回前关闭响应体
+		err := json.NewDecoder(resp.Body).Decode(&responseBody)
+		if err != nil {
+			log.Println("Failed to decode response body:", err)
+			// 其他错误处理逻辑
+			return nil
+		} else {
+			return nil
+		}
 	}
 
 	// 可以访问解析后的响应数据
