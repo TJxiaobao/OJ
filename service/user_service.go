@@ -142,7 +142,7 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	// 通过手机号判断是否已经注册
+	// 通过邮箱判断是否已经注册
 	count := dao.SelectUserByEmail(cmd.Email)
 	if count > 0 {
 		restapi.Success(c, "该邮箱已注册！")

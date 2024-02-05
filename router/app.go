@@ -3,6 +3,7 @@ package router
 import (
 	"github.com/TJxiaobao/OJ/docs"
 	"github.com/TJxiaobao/OJ/service"
+	"github.com/TJxiaobao/OJ/utils/middlewares"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -10,6 +11,7 @@ import (
 
 func Router() *gin.Engine {
 	r := gin.Default()
+	r.Use(middlewares.Cors())
 
 	// programatically set swagger info
 	docs.SwaggerInfo.Title = "Swagger Example API"
