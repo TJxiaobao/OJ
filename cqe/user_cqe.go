@@ -42,7 +42,7 @@ func (l *LoginCmd) Validate() error {
 type Register struct {
 	UserName string `json:"username" form:"username"`
 	Password string `json:"password" form:"password"`
-	Phone    string `json:"phone" form:"phone"`
+	Email    string `json:"email" form:"email"`
 	Code     string `json:"code" form:"phone"`
 }
 
@@ -53,8 +53,8 @@ func (r *Register) Validate() error {
 	if r.Password == "" {
 		return errno.NewSimpleBizError(errno.ErrMissingParameter, nil, "passord")
 	}
-	if r.Phone == "" {
-		return errno.NewSimpleBizError(errno.ErrMissingParameter, nil, "phone")
+	if r.Email == "" {
+		return errno.NewSimpleBizError(errno.ErrMissingParameter, nil, "email")
 	}
 	if r.Code == "" {
 		return errno.NewSimpleBizError(errno.ErrMissingParameter, nil, "code")

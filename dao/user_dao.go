@@ -45,16 +45,16 @@ func Insert(user models.User) error {
 	return DB.Model(models.User{}).Create(&user).Error
 }
 
-func SelectUserByPhone(phone string) int64 {
+func SelectUserByEmail(email string) int64 {
 	var count int64
 	err := DB.Model(models.User{}).
-		Where("phone = ?", phone).
+		Where("email = ?", email).
 		Count(&count).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return count
 		}
-		log.Print("select user by phone count error : %v", err)
+		log.Print("select user by email count error : %v", err)
 		return -1
 	}
 	return count

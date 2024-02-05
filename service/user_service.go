@@ -132,7 +132,7 @@ func Register(c *gin.Context) {
 
 	// 判断 验证码 是否正确
 	// todo test
-	deCode, err := dao.InitRedis().Get(c, cmd.Phone).Result()
+	deCode, err := dao.InitRedis().Get(c, cmd.Email).Result()
 	if err != nil {
 		restapi.FailedWithStatus(c, err, 500)
 		return
@@ -143,9 +143,9 @@ func Register(c *gin.Context) {
 	}
 
 	// 通过手机号判断是否已经注册
-	count := dao.SelectUserByPhone(cmd.Phone)
+	count := dao.SelectUserByEmail(cmd.Email)
 	if count > 0 {
-		restapi.Success(c, "该手机号已注册！")
+		restapi.Success(c, "该邮箱已注册！")
 		return
 	}
 
@@ -154,7 +154,7 @@ func Register(c *gin.Context) {
 		UserId:   uuid.GetUUID(),
 		UserName: cmd.UserName,
 		PassWord: md5.Md5Encrypt(cmd.Password),
-		Phone:    cmd.Phone,
+		Email:    cmd.Email,
 		UserRole: constant.UserNormalRole,
 	}
 	err = dao.Insert(user)
