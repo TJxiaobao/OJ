@@ -193,7 +193,7 @@ func SendCode(c *gin.Context) {
 	}
 
 	code := createCode()
-	err := dao.InitRedis().Set(c, cmd.Phone, code, time.Second*300) // 设置时间为 5 分钟
+	err := dao.InitRedis().Set(c, cmd.Email, code, time.Second*300) // 设置时间为 5 分钟
 	if err != nil {
 		log.Print("redis set error", err)
 		restapi.FailedWithStatus(c, nil, 500)

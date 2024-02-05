@@ -63,11 +63,11 @@ func (r *Register) Validate() error {
 }
 
 type SendCodeCmd struct {
-	Phone string `json:"phone" form:"phone"`
+	Email string `json:"email" form:"email"`
 }
 
 func (s *SendCodeCmd) Validate() error {
-	if s.Phone == "" {
+	if s.Email == "" {
 		return errno.NewSimpleBizError(errno.ErrMissingParameter, nil, "phone")
 	}
 	return nil
