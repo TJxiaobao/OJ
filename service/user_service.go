@@ -132,8 +132,13 @@ func Register(c *gin.Context) {
 	}
 
 	// 判断 验证码 是否正确
-	// todo test
-	deCode, err := dao.InitRedis().Get(c, cmd.Email).Result()
+	var code string
+	if cmd.Email == "" {
+		code = cmd.Phone
+	} else {
+		code = cmd.Email
+	}
+	deCode, err := dao.InitRedis().Get(c, code).Result()
 	if err != nil {
 		restapi.FailedWithStatus(c, err, 500)
 		return
@@ -144,10 +149,21 @@ func Register(c *gin.Context) {
 	}
 
 	// 通过邮箱判断是否已经注册
-	count := dao.SelectUserByEmail(cmd.Email)
-	if count > 0 {
-		restapi.Success(c, "该邮箱已注册！")
-		return
+	if cmd.Email != "" {
+		count := dao.SelectUserByEmail(cmd.Email)
+		if count > 0 {
+			restapi.Success(c, "该邮箱已注册！")
+			return
+		}
+	}
+
+	// 判断手机号是否注册
+	if cmd.Phone != "" {
+		count := dao.SelectUserByPhone(cmd.Phone)
+		if count > 0 {
+			restapi.Success(c, "该手机号已经注册！")
+			return
+		}
 	}
 
 	// 注册用户
@@ -178,17 +194,17 @@ func createCode() (code string) {
 	return
 }
 
-func SendCode(c *gin.Context) {
-	cmd := cqe.SendCodeCmd{}
+func SendCodeByEmail(c *gin.Context) {
+	cmd := cqe.SendCodeCmdByEmail{}
 	if err := c.BindJSON(&cmd); err != nil {
-		log.Print("sendCode cmd error", err)
+		log.Print("sendCode Email cmd error", err)
 		restapi.Failed(c, err)
 		return
 	}
 
 	// 判断 参数 是否为空
 	if err := cmd.Validate(); err != nil {
-		log.Print("sendcode params must not null", err)
+		log.Print("send_code_email params must not null", err)
 		restapi.Failed(c, err)
 		return
 	}
@@ -214,10 +230,40 @@ func SendCode(c *gin.Context) {
 
 	//发送邮件服务器、端口、发送者qq邮箱、qq邮箱授权码
 	//服务器地址和端口是腾讯的
-	d := gomail.NewDialer("smtp.qq.com", 587, constant.EmailSender, constant.EmailAuthCode)
+	d := gomail.NewDialer(constant.EmailQQHost, 587, constant.EmailSender, constant.EmailAuthCode)
 	if err := d.DialAndSend(m); err != nil {
 		panic(err)
 	}
 
 	restapi.Success(c, "send code success !")
+}
+
+func SendCodeBySms(c *gin.Context) {
+	cmd := cqe.SendCodeCmdBySms{}
+	if err := c.BindJSON(&cmd); err != nil {
+		log.Print("sendCode Email cmd error", err)
+		restapi.Failed(c, err)
+		return
+	}
+
+	// 判断 参数 是否为空
+	if err := cmd.Validate(); err != nil {
+		log.Print("send_code_email params must not null", err)
+		restapi.Failed(c, err)
+		return
+	}
+
+	// 手机号校验
+
+	// 存储到redis
+	code := createCode()
+	err := dao.InitRedis().Set(c, cmd.Phone, code, time.Second*300).Err() // 设置时间为 5 分钟
+	if err != nil {
+		log.Print("redis set error", err)
+		restapi.FailedWithStatus(c, nil, 500)
+		return
+	}
+
+	// 发送验证码
+	// todo
 }

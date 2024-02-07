@@ -43,6 +43,7 @@ type Register struct {
 	UserName string `json:"username" form:"username"`
 	Password string `json:"password" form:"password"`
 	Email    string `json:"email" form:"email"`
+	Phone    string `json:"phone" form:"phone"`
 	Code     string `json:"code" form:"phone"`
 }
 
@@ -59,15 +60,29 @@ func (r *Register) Validate() error {
 	if r.Code == "" {
 		return errno.NewSimpleBizError(errno.ErrMissingParameter, nil, "code")
 	}
+	if r.Email == "" && r.Phone == "" {
+		return errno.NewSimpleBizError(errno.ErrMissingParameter, nil, "email or phone must not null")
+	}
 	return nil
 }
 
-type SendCodeCmd struct {
+type SendCodeCmdByEmail struct {
 	Email string `json:"email" form:"email"`
 }
 
-func (s *SendCodeCmd) Validate() error {
+func (s *SendCodeCmdByEmail) Validate() error {
 	if s.Email == "" {
+		return errno.NewSimpleBizError(errno.ErrMissingParameter, nil, "email")
+	}
+	return nil
+}
+
+type SendCodeCmdBySms struct {
+	Phone string `json:"phone" form:"phone"`
+}
+
+func (s *SendCodeCmdBySms) Validate() error {
+	if s.Phone == "" {
 		return errno.NewSimpleBizError(errno.ErrMissingParameter, nil, "phone")
 	}
 	return nil
