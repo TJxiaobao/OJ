@@ -201,25 +201,20 @@ func SendCode(c *gin.Context) {
 		return
 	}
 
-	sender := "test@qq.com"      //发送者qq邮箱
-	authCode := "auth"           //qq邮箱授权码
-	mailTitle := "OJ验证码"         //邮件标题
-	mailBody := "注册的验证码为" + code //邮件内容,可以是html
-
 	//接收者邮箱列表
 	mailTo := []string{
 		cmd.Email,
 	}
 
 	m := gomail.NewMessage()
-	m.SetHeader("From", sender)       //发送者腾讯邮箱账号
-	m.SetHeader("To", mailTo...)      //接收者邮箱列表
-	m.SetHeader("Subject", mailTitle) //邮件标题
-	m.SetBody("text/html", mailBody)  //邮件内容,可以是html
+	m.SetHeader("From", constant.EmailSender)          //发送者腾讯邮箱账号
+	m.SetHeader("To", mailTo...)                       //接收者邮箱列表
+	m.SetHeader("Subject", constant.EmailTitl)         //邮件标题
+	m.SetBody("text/html", constant.EmailBodyTem+code) //邮件内容,可以是html
 
 	//发送邮件服务器、端口、发送者qq邮箱、qq邮箱授权码
 	//服务器地址和端口是腾讯的
-	d := gomail.NewDialer("smtp.qq.com", 587, sender, authCode)
+	d := gomail.NewDialer("smtp.qq.com", 587, constant.EmailSender, constant.EmailAuthCode)
 	if err := d.DialAndSend(m); err != nil {
 		panic(err)
 	}

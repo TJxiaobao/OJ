@@ -18,4 +18,10 @@ var (
 	UserRoleSuperAdmin = "0"
 	UserRoleAdmin      = "1"
 	UserNormalRole     = "2"
+
+	// email constant
+	EmailSender   = "test@qq.com"
+	EmailAuthCode = "auth"
+	EmailTitl     = "OJ 验证码"
+	EmailBodyTem  = "您的注册验证码为："
 )
