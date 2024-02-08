@@ -117,6 +117,61 @@ func Login(c *gin.Context) {
 	}
 }
 
+// Sms
+func LoginSms(c *gin.Context) {
+	cmd := cqe.LoginSmsCmd{}
+	if err := c.BindJSON(&cmd); err != nil {
+		log.Print("SmsLogin cmd error", err)
+		restapi.Failed(c, err)
+		return
+	}
+
+	// 判断 参数 是否为空
+	if err := cmd.Validate(); err != nil {
+		log.Print("Sms Login params must not null", err)
+		restapi.Failed(c, err)
+		return
+	}
+
+	// username and user_id
+	var username, user_id string
+
+	// 判断该手机号是否注册
+	if cmd.Phone != "" {
+		count, user := dao.SelectUserByPhone(cmd.Phone)
+		username = user.UserName
+		user_id = user.UserId
+		if count > 0 {
+			restapi.Success(c, "该手机号已经注册！")
+			return
+		}
+	}
+
+	// 判断验证码是否正确
+	deCode, err := dao.InitRedis().Get(c, cmd.Phone).Result()
+	if err != nil {
+		restapi.FailedWithStatus(c, err, 500)
+		return
+	}
+	if deCode != cmd.Code {
+		restapi.FailedWithStatus(c, errno.NewSimpleBizError(errno.ErrMissingParameter, nil, "code"), 400)
+		return
+	}
+
+	// 生成token
+	token_str, err := token.GenerateToken(username, user_id)
+	if err != nil {
+		log.Print("generate token error", err)
+		restapi.FailedWithStatus(c, err, 500)
+		return
+	}
+	token_result := restapi.NewTokenResult(token_str)
+	restapi.Success(c, token_result)
+	return
+}
+
+// Github
+
 func LoginGetGithubUrl(c *gin.Context) {
 	url := fmt.Sprintf("https://github.com/login/oauth/authorize?client_id=%s&redirect_uri=%s", constant.GithubOauthClientId, constant.GithubOauthRedirectUrl)
 	c.JSON(200, url)
@@ -155,7 +210,7 @@ func LoginGitHub(c *gin.Context) {
 		restapi.Failed(c, err)
 		return
 	}
-
+	// todo 待刷库、返回token等
 	print(GithubUser)
 }
 
@@ -181,6 +236,7 @@ func Register(c *gin.Context) {
 	} else {
 		code = cmd.Email
 	}
+	// todo test get code is key ?
 	deCode, err := dao.InitRedis().Get(c, code).Result()
 	if err != nil {
 		restapi.FailedWithStatus(c, err, 500)
@@ -202,7 +258,7 @@ func Register(c *gin.Context) {
 
 	// 判断手机号是否注册
 	if cmd.Phone != "" {
-		count := dao.SelectUserByPhone(cmd.Phone)
+		count, _ := dao.SelectUserByPhone(cmd.Phone)
 		if count > 0 {
 			restapi.Success(c, "该手机号已经注册！")
 			return
@@ -310,3 +366,5 @@ func SendCodeBySms(c *gin.Context) {
 	// 发送验证码
 	// todo
 }
+
+// todo 判断手机号和邮箱是否注册 剥离单独的方法

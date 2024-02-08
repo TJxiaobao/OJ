@@ -60,17 +60,20 @@ func SelectUserByEmail(email string) int64 {
 	return count
 }
 
-func SelectUserByPhone(phone string) int64 {
+func SelectUserByPhone(phone string) (int64, *models.User) {
 	var count int64
+	var user models.User
 	err := DB.Model(models.User{}).
 		Where("phone = ?", phone).
-		Count(&count).Error
+		Count(&count).
+		Find(&user).
+		Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return count
+			return count, nil
 		}
 		log.Print("select user by phone count error: ", err)
-		return -1
+		return -1, nil
 	}
-	return count
+	return count, &user
 }

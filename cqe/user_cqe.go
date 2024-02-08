@@ -98,3 +98,18 @@ func (s *SendCodeCmdBySms) Validate() error {
 	}
 	return nil
 }
+
+type LoginSmsCmd struct {
+	Phone string `json:"phone" form:"phone"`
+	Code  string `json:"code" form:"code"`
+}
+
+func (l *LoginSmsCmd) Validate() error {
+	if l.Phone == "" {
+		return errno.NewSimpleBizError(errno.ErrMissingParameter, nil, "phone")
+	}
+	if l.Code == "" {
+		return errno.NewSimpleBizError(errno.ErrMissingParameter, nil, "code")
+	}
+	return nil
+}
