@@ -117,7 +117,60 @@ func Login(c *gin.Context) {
 	}
 }
 
-// Sms
+// Email login
+func LoginEmail(c *gin.Context) {
+	cmd := cqe.LoginEmailCmd{}
+	if err := c.BindJSON(&cmd); err != nil {
+		log.Print("emailLogin cmd error", err)
+		restapi.Failed(c, err)
+		return
+	}
+
+	// 判断 参数 是否为空
+	if err := cmd.Validate(); err != nil {
+		log.Print("email Login params must not null", err)
+		restapi.Failed(c, err)
+		return
+	}
+
+	// username and user_id
+	var username, user_id string
+
+	// 通过邮箱判断是否已经注册
+	if cmd.Email != "" {
+		count, user := dao.SelectUserByEmail(cmd.Email)
+		username = user.UserName
+		user_id = user.UserId
+		if count > 0 {
+			restapi.Success(c, "该邮箱已注册！")
+			return
+		}
+	}
+
+	// 判断验证码是否正确
+	deCode, err := dao.InitRedis().Get(c, cmd.Email).Result()
+	if err != nil {
+		restapi.FailedWithStatus(c, err, 500)
+		return
+	}
+	if deCode != cmd.Code {
+		restapi.FailedWithStatus(c, errno.NewSimpleBizError(errno.ErrMissingParameter, nil, "code"), 400)
+		return
+	}
+
+	// 生成token
+	token_str, err := token.GenerateToken(username, user_id)
+	if err != nil {
+		log.Print("generate token error", err)
+		restapi.FailedWithStatus(c, err, 500)
+		return
+	}
+	token_result := restapi.NewTokenResult(token_str)
+	restapi.Success(c, token_result)
+	return
+}
+
+// Sms login
 func LoginSms(c *gin.Context) {
 	cmd := cqe.LoginSmsCmd{}
 	if err := c.BindJSON(&cmd); err != nil {
@@ -249,7 +302,7 @@ func Register(c *gin.Context) {
 
 	// 通过邮箱判断是否已经注册
 	if cmd.Email != "" {
-		count := dao.SelectUserByEmail(cmd.Email)
+		count, _ := dao.SelectUserByEmail(cmd.Email)
 		if count > 0 {
 			restapi.Success(c, "该邮箱已注册！")
 			return

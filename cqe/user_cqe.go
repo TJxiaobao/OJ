@@ -113,3 +113,18 @@ func (l *LoginSmsCmd) Validate() error {
 	}
 	return nil
 }
+
+type LoginEmailCmd struct {
+	Email string `json:"email" form:"email"`
+	Code  string `json:"code" form:"code"`
+}
+
+func (l *LoginEmailCmd) Validate() error {
+	if l.Email == "" {
+		return errno.NewSimpleBizError(errno.ErrMissingParameter, nil, "email")
+	}
+	if l.Code == "" {
+		return errno.NewSimpleBizError(errno.ErrMissingParameter, nil, "code")
+	}
+	return nil
+}
