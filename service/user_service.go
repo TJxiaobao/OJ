@@ -8,6 +8,7 @@ import (
 	"github.com/TJxiaobao/OJ/models"
 	"github.com/TJxiaobao/OJ/utils/errno"
 	"github.com/TJxiaobao/OJ/utils/md5"
+	"github.com/TJxiaobao/OJ/utils/oauth/github"
 	"github.com/TJxiaobao/OJ/utils/restapi"
 	"github.com/TJxiaobao/OJ/utils/token"
 	"github.com/TJxiaobao/OJ/utils/uuid"
@@ -114,6 +115,48 @@ func Login(c *gin.Context) {
 		restapi.Success(c, token_result)
 		return
 	}
+}
+
+func LoginGetGithubUrl(c *gin.Context) {
+	url := fmt.Sprintf("https://github.com/login/oauth/authorize?client_id=%s&redirect_uri=%s", constant.GithubOauthClientId, constant.GithubOauthRedirectUrl)
+	c.JSON(200, url)
+}
+
+func LoginGitHub(c *gin.Context) {
+	query := cqe.LoginGitHubQuery{}
+	if err := c.ShouldBindQuery(&query); err != nil {
+		log.Print("get code error: ", err)
+		restapi.Failed(c, err)
+		return
+	}
+
+	// 判断 参数 是否为空
+	if err := query.Validate(); err != nil {
+		log.Print("code must not null", err)
+		restapi.Failed(c, err)
+		return
+	}
+
+	// 获取url
+	url := github.GetTokenAuthUrl(query.Code)
+
+	// 获取token
+	token, err := github.GetToken(url)
+	if err != nil {
+		log.Print("get token error: ", err)
+		restapi.Failed(c, err)
+		return
+	}
+
+	// 获取用户信息
+	GithubUser, err := github.GetUserInfo(token)
+	if err != nil {
+		log.Print("get github user info error: ", err)
+		restapi.Failed(c, err)
+		return
+	}
+
+	print(GithubUser)
 }
 
 func Register(c *gin.Context) {

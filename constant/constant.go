@@ -1,6 +1,8 @@
 package constant
 
 var (
+	// todo 后期改为json配置文件，并读取配置文件
+
 	DefaultPage = "1"
 	DefaultSize = "1"
 	SandBoXUrl  = "http://localhost:8081/code_execute"
@@ -32,4 +34,9 @@ var (
 	EmailSohuHost  = "smtp.sohu.com"
 
 	// phone constant
+
+	// GitHub oauth
+	GithubOauthClientId     = ""
+	GithubOauthClientSecret = ""
+	GithubOauthRedirectUrl  = ""
 )

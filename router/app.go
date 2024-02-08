@@ -33,6 +33,8 @@ func Router() *gin.Engine {
 
 	// user
 	r.GET("/user/get_user_detail", service.GetUserDetail)
+	r.GET("/user/login_github_url", service.LoginGetGithubUrl)
+	r.GET("/user/login_github", service.LoginGitHub)
 	r.POST("/user/delete_user", service.DeleteUser)
 	r.POST("/user/login", service.Login)
 	r.POST("/user/register", service.Register)

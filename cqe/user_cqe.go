@@ -39,6 +39,17 @@ func (l *LoginCmd) Validate() error {
 	return nil
 }
 
+type LoginGitHubQuery struct {
+	Code string `json:"code" form:"code"`
+}
+
+func (l *LoginGitHubQuery) Validate() error {
+	if l.Code == "" {
+		return errno.NewSimpleBizError(errno.ErrMissingParameter, nil, "code")
+	}
+	return nil
+}
+
 type Register struct {
 	UserName string `json:"username" form:"username"`
 	Password string `json:"password" form:"password"`
