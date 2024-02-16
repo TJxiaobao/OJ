@@ -2,6 +2,7 @@ package dao
 
 import (
 	"github.com/TJxiaobao/OJ/models"
+	"github.com/TJxiaobao/OJ/utils/logger"
 	"log"
 )
 
@@ -28,6 +29,7 @@ func GetQuestionSubmitList(user_id, question_id string, status, page, size int) 
 		Error
 	if err != nil {
 		log.Print("getQuestionSubmitDao error", err)
+		logger.LogToFile("getQuestionSubmitDao error: " + err.Error())
 		return nil, 0, err
 	}
 	return data, count, nil
