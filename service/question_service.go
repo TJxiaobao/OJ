@@ -10,15 +10,6 @@ import (
 	"strconv"
 )
 
-// GetQuestionList godoc
-// @Summary      查询Question问题列表
-// @Description	 test
-// @Tags         question
-// @Accept       json
-// @Produce      json
-// @Param        id   path      int  true  "Question ID"
-// @Success      200  {string} json "{"code" : "200", "msg" : "", "data" : ""}"
-// @Router       /question/{id} [get]
 func GetQuestionList(c *gin.Context) {
 	page, err := strconv.Atoi(c.DefaultQuery("page", constant.DefaultPage))
 	if err != nil {
@@ -45,16 +36,6 @@ func GetQuestionList(c *gin.Context) {
 	resp := restapi.NewPageResult(data, page, size, count)
 	restapi.Success(c, resp)
 }
-
-// GetQuestionDetail godoc
-// @Summary      查询Question 详情
-// @Description	 test
-// @Tags         question
-// @Accept       json
-// @Produce      json
-// @Param        id   path      int  true  "Question ID"
-// @Success      200  {string} json "{"code" : "200", "msg" : "", "data" : ""}"
-// @Router       /question/{id} [get]
 
 func GetQuestionDetail(c *gin.Context) {
 	query := cqe.GetQuestionDetailQuery{}

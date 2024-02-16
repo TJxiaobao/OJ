@@ -71,15 +71,6 @@ func DeleteUser(c *gin.Context) {
 	restapi.Success(c, "删除成功！")
 }
 
-// Login
-// @Summary      用户登陆
-// @Description	 test
-// @Tags         user
-// @Param        user_id   formData string  false "user_id"
-// @Param        username   formData string  false "username"
-// @Param        password   formData string  false "password"
-// @Success      200  {string} json "{"code" : "200", "msg" : "", "data" : ""}"
-// @Router       /user/login [post]
 func Login(c *gin.Context) {
 	cmd := cqe.LoginCmd{}
 	if err := c.BindJSON(&cmd); err != nil {
