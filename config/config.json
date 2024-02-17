@@ -1,0 +1,29 @@
+{
+  "app": {
+    "name": "oj",
+    "env": "pre",
+    "port": 8080,
+    "debug_port": 8001
+  },
+  "Db": {
+    "driver" : "mysql",
+    "host": "localhost",
+    "port": 3306,
+    "user": "1234",
+    "password": "12344",
+    "db": "oj",
+    "charset": "utf8mb4",
+    "max_open_count": 32,
+    "max_idle_count": 32,
+    "log": {
+      "path": "",
+      "max_backups": 3,
+      "max_size": 100
+    }
+  },
+  "redis": {
+    "host": "localhost",
+    "port": 6379,
+    "pool_size": 128
+  }
+}

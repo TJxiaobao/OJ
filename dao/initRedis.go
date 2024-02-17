@@ -1,13 +1,17 @@
 package dao
 
-import "github.com/go-redis/redis/v8"
+import (
+	"github.com/go-redis/redis/v8"
+	"strconv"
+)
 
 var RDB = InitRedis()
 
 func InitRedis() *redis.Client {
+	addr := config.Redis.Host + ":" + strconv.Itoa(config.Redis.Port)
 	return redis.NewClient(&redis.Options{
-		Addr:     "这里写自己虚拟机得ip地址、或者是本地得ip地址，视个人情况而定:6379",
-		Password: "",
+		Addr:     addr,
+		Password: config.Redis.Auth,
 		DB:       0,
 	})
 }

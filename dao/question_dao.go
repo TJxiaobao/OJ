@@ -2,7 +2,7 @@ package dao
 
 import (
 	"github.com/TJxiaobao/OJ/models"
-	"github.com/TJxiaobao/OJ/utils/logger"
+	"github.com/TJxiaobao/OJ/utils/logger_oj"
 	"log"
 )
 
@@ -20,7 +20,7 @@ func GetQuestionList(keyword string, page int, size int) ([]*models.Question, in
 		Error
 	if err != nil {
 		log.Print("GetQuestionList error", err)
-		logger.LogToFile("GetQuestionList error : " + err.Error())
+		logger_oj.LogToFile("GetQuestionList error : " + err.Error())
 		return nil, 0
 	}
 	return data, count
@@ -31,7 +31,7 @@ func GetQuestionDetail(question_id string) (*models.Question, error) {
 	err := DB.Model(models.Question{}).Where("question_id = ? AND isDelete = 0", question_id).Find(&data).Error
 	if err != nil {
 		log.Print("question detail DB error", err)
-		logger.LogToFile("question detail DB error" + err.Error())
+		logger_oj.LogToFile("question detail DB error" + err.Error())
 		return nil, err
 	}
 	return &data, nil
