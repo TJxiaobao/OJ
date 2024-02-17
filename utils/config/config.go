@@ -18,11 +18,11 @@ type AppConfig struct {
 type Database struct {
 	Driver   string `json:"driver"`
 	Port     int    `json:"port"`
-	Address  string `json:"address"`
+	Address  string `json:"host"`
 	Database string `json:"database"`
 	User     string `json:"user"`
 	Password string `json:"password"`
-	Charset  string `json:"chartset"`
+	Charset  string `json:"charset"`
 }
 
 type Redis struct {

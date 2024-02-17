@@ -25,6 +25,7 @@ func InitDb() *gorm.DB {
 	})
 	if err != nil {
 		log.Print("init db err", err)
+		logger_oj.LogToFile("init db error:" + err.Error())
 		return nil
 	}
 	return db
