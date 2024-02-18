@@ -58,6 +58,7 @@ CREATE TABLE `oj_question`
     `passNum`     INT          NOT NULL COMMENT '通过总数',
     `max_mem`     INT          NOT NULL COMMENT '最大内存',
     `max_runtime` INT          NOT NULL COMMENT '最大运行时间',
+    `difficulty`  INT          NOT NULL COMMENT '难度',
     `createTime`  DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `updateTime`  DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
     `isDelete`    INT      DEFAULT 0 COMMENT '逻辑删除标志（0: 未删除，1: 已删除）'
