@@ -1,5 +1,9 @@
 package constant
 
+import config2 "github.com/TJxiaobao/OJ/utils/config"
+
+var config = config2.LoadConfig()
+
 var (
 	// todo 后期改为json配置文件，并读取配置文件
 
@@ -22,16 +26,12 @@ var (
 	UserNormalRole     = "2"
 
 	// email constant
-	EmailSender    = "test@qq.com"
-	EmailAuthCode  = "auth"
-	EmailTitl      = "OJ 验证码"
-	EmailBodyTem   = "您的注册验证码为："
-	EmailQQHost    = "smtp.qq.com"
-	Email163Host   = "smtp.163.com"
-	EmailSinaHost  = "smtp.sina.com"
-	EmailYahooHost = "smtp.yahoo.com"
-	Email126Host   = "smtp.126.com"
-	EmailSohuHost  = "smtp.sohu.com"
+	EmailSender   = config.Email.Sender
+	EmailAuthCode = config.Email.AuthCode
+	EmailTitl     = "OJ 验证码"
+	EmailBodyTem  = "您的注册验证码为："
+	EmailHost     = config.Email.Host
+	EmailPort     = config.Email.Port
 
 	// phone constant
 

@@ -373,7 +373,7 @@ func SendCodeByEmail(c *gin.Context) {
 
 	//发送邮件服务器、端口、发送者qq邮箱、qq邮箱授权码
 	//服务器地址和端口是腾讯的
-	d := gomail.NewDialer(constant.EmailQQHost, 587, constant.EmailSender, constant.EmailAuthCode)
+	d := gomail.NewDialer(constant.EmailHost, constant.EmailPort, constant.EmailSender, constant.EmailAuthCode)
 	if err := d.DialAndSend(m); err != nil {
 		panic(err)
 	}

@@ -32,10 +32,18 @@ type Redis struct {
 	PoolSize int    `json:"pool_size"`
 }
 
+type Email struct {
+	Sender   string `json:"sender"`
+	AuthCode string `json:"auth_code"`
+	Host     string `json:"host"`
+	Port     int    `json:"port"`
+}
+
 type Configuration struct {
 	App   AppConfig
 	Db    Database
 	Redis Redis
+	Email Email
 }
 
 var once sync.Once

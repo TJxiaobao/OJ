@@ -9,9 +9,9 @@
     "driver" : "mysql",
     "host": "localhost",
     "port": 3306,
-    "user": "1234",
-    "password": "12344",
-    "db": "oj",
+    "user": "root",
+    "password": "root",
+    "database": "oj",
     "charset": "utf8mb4",
     "max_open_count": 32,
     "max_idle_count": 32,
@@ -25,5 +25,16 @@
     "host": "localhost",
     "port": 6379,
     "pool_size": 128
+  },
+  "email" : {
+    "sender" : "test@qq.com",
+    "auth_code" : "fadfasd",
+    "host" : "qq.com",
+    "port" : 587
+  },
+  "github_oauth" : {
+    "client_id" : "",
+    "client_secret" : "",
+    "redirect_url" : ""
   }
 }
